@@ -1,0 +1,6 @@
+../Core/Src/ds18b20_hal.c:15:9:ds_reset_pulse	24	static
+../Core/Src/ds18b20_hal.c:38:6:ds_write_bit	16	static
+../Core/Src/ds18b20_hal.c:53:10:ds_read_bit	24	static
+../Core/Src/ds18b20_hal.c:73:6:ds_write_byte	24	static
+../Core/Src/ds18b20_hal.c:81:9:ds_read_byte	24	static
+../Core/Src/ds18b20_hal.c:90:10:ds_get_temperature	16	static
