@@ -20,10 +20,10 @@
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-#include "ds18b20_hal.h"
+#include "OneWire.h"
 #include "stdint.h"
 #include "pid.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,28 +43,17 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim3;
 
-#define K_P     1.00
-#define K_I     0.00
-#define K_D     0.00
+UART_HandleTypeDef huart1;
 
-struct GLOBAL_FLAGS
-{
-	//! True when PID control loop should run one time
-	uint8_t pidTimer :1;
-	uint8_t dummy :7;
-} gFlags =
-{ 0, 0 };
-
-//! Parameters for regulator
-struct PID_DATA pidData;
 /* USER CODE BEGIN PV */
-
+extern float Temp[MAXDEVICES_ON_THE_BUS];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -103,19 +92,18 @@ int main(void)
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
 	MX_TIM3_Init();
+	MX_USART1_UART_Init();
 	/* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start(&htim3);
-	pid_Init(K_P * SCALING_FACTOR, K_I * SCALING_FACTOR, K_D * SCALING_FACTOR,
-			&pidData);
-	//uint16_t temperature = 0;
+	get_ROMid();
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		//temperature = ds_get_temperature();
-
+		get_Temperature();
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -205,6 +193,39 @@ static void MX_TIM3_Init(void)
 	/* USER CODE BEGIN TIM3_Init 2 */
 
 	/* USER CODE END TIM3_Init 2 */
+
+}
+
+/**
+ * @brief USART1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_USART1_UART_Init(void)
+{
+
+	/* USER CODE BEGIN USART1_Init 0 */
+
+	/* USER CODE END USART1_Init 0 */
+
+	/* USER CODE BEGIN USART1_Init 1 */
+
+	/* USER CODE END USART1_Init 1 */
+	huart1.Instance = USART1;
+	huart1.Init.BaudRate = 115200;
+	huart1.Init.WordLength = UART_WORDLENGTH_8B;
+	huart1.Init.StopBits = UART_STOPBITS_1;
+	huart1.Init.Parity = UART_PARITY_NONE;
+	huart1.Init.Mode = UART_MODE_TX_RX;
+	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+	if (HAL_HalfDuplex_Init(&huart1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN USART1_Init 2 */
+
+	/* USER CODE END USART1_Init 2 */
 
 }
 
