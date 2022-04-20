@@ -406,7 +406,7 @@ int get_ROMid (void){
 			}
 
 		}
-		i = 0;
+ 		i = 0;
 		for (; i < devices; i++) {//выводим в кон�?оль в�?е найденные ROM
 			RomCode *r = &ow.ids[i];
 			uint8_t crc = owCRC8(r);

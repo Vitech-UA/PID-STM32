@@ -31,12 +31,15 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum
+{
+	DISPLAY_INT, DISPLAY_FLOAT
+} display_type_t;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -59,6 +62,20 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define DS18B20_DQ_Pin GPIO_PIN_12
 #define DS18B20_DQ_GPIO_Port GPIOB
+#define BTN2_Pin GPIO_PIN_10
+#define BTN2_GPIO_Port GPIOA
+#define BTN2_EXTI_IRQn EXTI15_10_IRQn
+#define BTN1_Pin GPIO_PIN_11
+#define BTN1_GPIO_Port GPIOA
+#define BTN1_EXTI_IRQn EXTI15_10_IRQn
+#define BUZZER_Pin GPIO_PIN_12
+#define BUZZER_GPIO_Port GPIOA
+#define MAX7219_NCS_Pin GPIO_PIN_4
+#define MAX7219_NCS_GPIO_Port GPIOB
+#define LED1_Pin GPIO_PIN_7
+#define LED1_GPIO_Port GPIOB
+#define LED2_Pin GPIO_PIN_8
+#define LED2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
