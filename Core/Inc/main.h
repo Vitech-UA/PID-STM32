@@ -62,6 +62,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ZERO_DETECT_Pin GPIO_PIN_5
+#define ZERO_DETECT_GPIO_Port GPIOA
+#define ZERO_DETECT_EXTI_IRQn EXTI9_5_IRQn
 #define DS18B20_DQ_Pin GPIO_PIN_12
 #define DS18B20_DQ_GPIO_Port GPIOB
 #define BTN2_Pin GPIO_PIN_10
