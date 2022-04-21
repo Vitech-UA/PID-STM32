@@ -114,12 +114,12 @@ void MAX7219_print_temperature(volatile uint16_t number)
 		n = 9999;
 	if (n <= 0)
 		n = 0;
-
+	uint8_t DIG2 = n % 1000 / 100;
 	uint8_t DIG3 = n % 100 / 10;
 	uint8_t DIG4 = n % 10;
 
-	MAX7219_print_char(0, 0x0F); // 't'
-
+	//MAX7219_print_char(0, 0x0F); // 't'
+	MAX7219_write_register(3, NUM[DIG2]);
 	MAX7219_write_register(2, NUM[DIG3]);
 	MAX7219_write_register(1, NUM[DIG4]);
 	MAX7219_print_char(3, 0x63);
