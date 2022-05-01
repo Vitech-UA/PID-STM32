@@ -2,6 +2,7 @@
 #include "stm32f1xx_hal.h"
 #include "stdio.h"
 #include "string.h"
+#include "main.h"
 volatile uint8_t recvFlag;
 volatile uint16_t rc_buffer[5];
 
@@ -458,6 +459,7 @@ int get_ROMid(void)
 				pDelay = 1000000;
 				for (i = 0; i < pDelay * 1; i++) /* Wait a bit. */
 					__asm__("nop");
+
 			}
 
 		}
@@ -483,10 +485,14 @@ int get_ROMid(void)
 		return 0;
 	else
 		return -1;
+	//error
 }
 
 void get_Temperature(void)
 {
+	ow.ids[0].family = 0;
+	owSearchCmd(&ow);
+
 	i = 0;
 	for (; i < devices; i++)
 	{
@@ -502,9 +508,10 @@ void get_Temperature(void)
 			Temp[i] = (float) (t.inCelsus * 10 + t.frac) / 10.0;
 			break;
 		case 0x00:
+			sensor_error_handler();
 			break;
 		default:
-			// error handler
+
 			break;
 		}
 	}

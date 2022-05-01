@@ -214,15 +214,7 @@ void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 
-	buzzer_delay -= 1;
-	if (buzzer_delay == 0)
-	{
-		buzzer_delay = 100;
-		HAL_TIM_Base_Stop_IT(&htim2);
-		HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, false);
-	}
-	else
-		HAL_GPIO_TogglePin(BUZZER_GPIO_Port, BUZZER_Pin);
+	HAL_GPIO_TogglePin(BUZZER_GPIO_Port, BUZZER_Pin);
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */

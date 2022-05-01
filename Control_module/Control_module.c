@@ -155,8 +155,14 @@ void LED2_set_state(bool state)
 {
 	HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, state);
 }
-void Buzzer_beep(void)
+void set_buzzer(bool state)
 {
-	HAL_TIM_Base_Start_IT(&htim2);
-
+	if (state)
+	{
+		HAL_TIM_Base_Start_IT(&htim2);
+	}
+	else{
+		HAL_TIM_Base_Stop_IT(&htim2);
+		HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, false);
+	}
 }

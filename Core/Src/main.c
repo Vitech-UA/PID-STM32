@@ -29,13 +29,13 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define DEFAULT_TEMPERATURE 90
+#define DEFAULT_TEMPERATURE 72
 // Коефіцієнти для PID регулятора
 #define K_P     230
 #define K_I     0.06
 #define K_D     0.0
 // значення PID перераховутиметься кожні 500 мС
-#define TIME_INTERVAL   200
+#define TIME_INTERVAL   400
 struct GLOBAL_FLAGS
 {
 	uint8_t pidTimer :1;
@@ -71,6 +71,8 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 extern float Temp[MAXDEVICES_ON_THE_BUS];
+extern OneWire ow;
+extern char SEG;
 volatile uint8_t target_temperature = DEFAULT_TEMPERATURE;
 volatile int display_buffer_int = 0;
 uint32_t previousMillis = 0;
@@ -79,6 +81,7 @@ bool btn1_pressed_flag;
 bool btn2_pressed_flag;
 uint32_t tick = 0;
 uint16_t dimmer_value = 0;
+bool sensor_state_flag = true;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -137,8 +140,12 @@ int main(void)
 	MX_TIM2_Init();
 	MX_TIM3_Init();
 	/* USER CODE BEGIN 2 */
+	MAX7219_clear();
+
 	get_ROMid();
+
 	MAX7219_init();
+
 	PID_init();
 
 	int16_t referenceValue, measurementValue, inputValue;
@@ -148,8 +155,6 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-
-		MAX7219_print_temperature(display_buffer_int);
 
 		if (btn1_pressed_flag || btn2_pressed_flag)
 		{
@@ -171,7 +176,7 @@ int main(void)
 		default:
 			show_temperature_handler();
 		}
-
+		MAX7219_print_temperature(display_buffer_int);
 		// Розрахунок значення для PID по-таймеру
 		if (gFlags.pidTimer)
 		{
@@ -290,9 +295,9 @@ static void MX_TIM2_Init(void)
 
 	/* USER CODE END TIM2_Init 1 */
 	htim2.Instance = TIM2;
-	htim2.Init.Prescaler = 8000;
+	htim2.Init.Prescaler = 2000;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim2.Init.Period = 4;
+	htim2.Init.Period = 100;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -548,6 +553,10 @@ void SysTick_Handler(void)
 	{
 		gFlags.pidTimer = TRUE;
 		i = 0;
+		if (sensor_state_flag)
+		{
+			HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+		}
 	}
 	/* USER CODE END SysTick_IRQn 0 */
 	HAL_IncTick();
@@ -576,6 +585,36 @@ void set_triac_value(int16_t inputValue)
 	if (inputValue > 9000)
 		inputValue = 9000;
 	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 9000 - inputValue);
+}
+
+void sensor_error_handler(void)
+{
+	//Проблеми з підключенням сенсора
+	//1) Відключаю переривання
+	HAL_NVIC_DisableIRQ(EXTI9_5_IRQn);
+	set_triac_value(0);
+	sensor_state_flag = false;
+	HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, false);
+	//2) Сигналізуюю про обрив сенсора
+	MAX7219_clear();
+	//Err
+	MAX7219_print_char(0, 0x4F);
+	MAX7219_print_char(1, 0x05);
+	MAX7219_print_char(2, 0x05);
+
+	while (1)
+	{
+		set_buzzer(true);
+		LED1_set_state(true);
+		MAX7219_set_brightness(0);
+		HAL_Delay(200);
+
+		set_buzzer(false);
+		LED1_set_state(false);
+		MAX7219_set_brightness(15);
+		HAL_Delay(200);
+
+	}
 }
 /* USER CODE END 4 */
 

@@ -15,5 +15,7 @@ void MAX7219_print_char(uint8_t position, uint8_t symbol);
 void MAX7219_init (void);
 void LED1_set_state(bool state);
 void LED2_set_state(bool state);
-void Buzzer_beep(void);
+void set_buzzer(bool state);
+
+
 #endif /* CONTROL_MODULE_H_ */
