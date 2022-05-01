@@ -31,7 +31,7 @@
 /* USER CODE BEGIN PTD */
 #define DEFAULT_TEMPERATURE 72
 // Коефіцієнти для PID регулятора
-#define K_P     230
+#define K_P     240
 #define K_I     0.06
 #define K_D     0.0
 // значення PID перераховутиметься кожні 500 мС
