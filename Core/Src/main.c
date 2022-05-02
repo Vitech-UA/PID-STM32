@@ -34,7 +34,7 @@
 #define K_P     200
 #define K_I     0.06
 #define K_D     0.0
-// значення PID перераховутиметься кожні 500 мС
+// значення PID перераховутиметься кожні 1000 мС
 #define TIME_INTERVAL   1000
 struct GLOBAL_FLAGS
 {
