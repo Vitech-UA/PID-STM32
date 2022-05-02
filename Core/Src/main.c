@@ -31,11 +31,11 @@
 /* USER CODE BEGIN PTD */
 #define DEFAULT_TEMPERATURE 72
 // Коефіцієнти для PID регулятора
-#define K_P     240
+#define K_P     200
 #define K_I     0.06
 #define K_D     0.0
 // значення PID перераховутиметься кожні 500 мС
-#define TIME_INTERVAL   400
+#define TIME_INTERVAL   1000
 struct GLOBAL_FLAGS
 {
 	uint8_t pidTimer :1;
