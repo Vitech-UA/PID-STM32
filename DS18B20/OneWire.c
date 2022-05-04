@@ -490,8 +490,8 @@ int get_ROMid(void)
 
 void get_Temperature(void)
 {
-	ow.ids[0].family = 0;
-	owSearchCmd(&ow);
+	//ow.ids[0].family = 0;
+	//owSearchCmd(&ow);
 
 	i = 0;
 	for (; i < devices; i++)

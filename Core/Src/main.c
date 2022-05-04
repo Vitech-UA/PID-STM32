@@ -31,11 +31,11 @@
 /* USER CODE BEGIN PTD */
 #define DEFAULT_TEMPERATURE 72
 // Коефіцієнти для PID регулятора
-#define K_P     200
+#define K_P     240
 #define K_I     0.06
 #define K_D     0.0
-// значення PID перераховутиметься кожні 1000 мС
-#define TIME_INTERVAL   1000
+// значення PID перераховутиметься кожні 500 мС
+#define TIME_INTERVAL   500
 struct GLOBAL_FLAGS
 {
 	uint8_t pidTimer :1;
@@ -149,6 +149,7 @@ int main(void)
 	PID_init();
 
 	int16_t referenceValue, measurementValue, inputValue;
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -437,8 +438,7 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
-			DS18B20_DQ_Pin | MAX7219_NCS_Pin | LED1_Pin | LED2_Pin,
-			GPIO_PIN_RESET);
+	DS18B20_DQ_Pin | MAX7219_NCS_Pin | LED1_Pin | LED2_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(BUZZER_GPIO_Port, BUZZER_Pin, GPIO_PIN_RESET);
